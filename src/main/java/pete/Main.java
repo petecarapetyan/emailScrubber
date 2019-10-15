@@ -63,11 +63,6 @@ public class Main {
                 }
             }
         }
-        String[] seperationLine = {"++++++++++++++++++++++++++++++++++++++++++", "++++++++++++++++++++++++++++++++++++++++++"};
-        oneEmail.add(out(seperationLine));
-        emailOnly.add(out(seperationLine));
-        twoEmail.add(out(seperationLine));
-        multiName.add(out(seperationLine));
         System.out.println("emailOnly=" + emailOnly.size());
         System.out.println("twoEmail=" + twoEmail.size());
         System.out.println("multiName=" + multiName.size());
