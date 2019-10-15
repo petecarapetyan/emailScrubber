@@ -51,16 +51,16 @@ public class Main {
                 if (matcher.matches()) {
                     emailCount = emailCount + 1;
                 }
-                if (emailCount == 1 && wordCount == 3) {
-                    oneEmail.add(out(line));
-                } else if (emailCount == 1 && wordCount == 1) {
-                    emailOnly.add(out(line));
+            }
+            if (emailCount == 1 && wordCount == 3) {
+                oneEmail.add(out(line));
+            } else if (emailCount == 1 && wordCount == 1) {
+                emailOnly.add(out(line));
 //                    System.out.println(out(line));
-                } else if (emailCount > 1 && wordCount > 3) {
-                    twoEmail.add(out(line));
-                } else if (emailCount > 0) {
-                    multiName.add(out(line));
-                }
+            } else if (emailCount > 1 && wordCount > 3) {
+                twoEmail.add(out(line));
+            } else if (emailCount > 0) {
+                multiName.add(out(line));
             }
         }
         System.out.println("emailOnly=" + emailOnly.size());
@@ -105,10 +105,24 @@ public class Main {
             StringBuilder fileOutput = new StringBuilder();
             while (innerIter.hasNext()) {
                 String s = innerIter.next();
-                if(s.indexOf(",")>0){
+                // copying the line twice, without last email, in case needed for the two email file
+                // will still have to hand edit, this just makes it a touch faster.
+                if (name=="twoEmail"){
                     int i = s.lastIndexOf(",");
-                    s = s.substring(0, i )+ "|" + s.substring(i+1, s.length());
+                    String copy = s;
+                    copy = copy.substring(0, i );
+                    int j = copy.lastIndexOf(",");
+                    copy = copy.substring(0, j )+ "|" + copy.substring(j+1, copy.length());
+                    copy= copy.replace(",", " ");
+                    fileOutput.append(copy + "\n");
+                    s = s.substring(0, j )+ "|" + s.substring(i+1, s.length());
                     s= s.replace(",", " ");
+                }else {
+                    if (s.indexOf(",") > 0) {
+                        int i = s.lastIndexOf(",");
+                        s = s.substring(0, i) + "|" + s.substring(i + 1, s.length());
+                        s = s.replace(",", " ");
+                    }
                 }
                 fileOutput.append(s + "\n");
             }
