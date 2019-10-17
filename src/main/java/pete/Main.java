@@ -99,11 +99,14 @@ public class Main {
         Map<String, List<String>> output = clean(lines);
         Iterator<String> groupIter = output.keySet().iterator();
         while (groupIter.hasNext()) {
+            int count = 0;
+            int fileCount = 1;
             String name = groupIter.next();
             List<String> namedGroup = output.get(name);
             Iterator<String> innerIter = namedGroup.iterator();
             StringBuilder fileOutput = new StringBuilder();
             while (innerIter.hasNext()) {
+                count++;
                 String s = innerIter.next();
                 // copying the line twice, without last email, in case needed for the two email file
                 // will still have to hand edit, this just makes it a touch faster.
@@ -113,21 +116,32 @@ public class Main {
                     copy = copy.substring(0, i );
                     int j = copy.lastIndexOf(",");
                     copy = copy.substring(0, j )+ "|" + copy.substring(j+1, copy.length());
-                    copy= copy.replace(",", " ");
+                    copy= copy.replace("|", ",");
                     fileOutput.append(copy + "\n");
                     s = s.substring(0, j )+ "|" + s.substring(i+1, s.length());
-                    s= s.replace(",", " ");
+                    s= s.replace("|", ",");
                 }else {
                     if (s.indexOf(",") > 0) {
                         int i = s.lastIndexOf(",");
-                        s = s.substring(0, i) + "|" + s.substring(i + 1, s.length());
-                        s = s.replace(",", " ");
+                        s = s.substring(0, i) + "," + s.substring(i + 1, s.length());
                     }
                 }
                 fileOutput.append(s + "\n");
+                if (count>=100){
+                    count = 0;
+                    String fileName = "JK"+name+fileCount+".csv";
+                    fileCount++;
+                    write(fileName, fileOutput.toString());
+                    fileOutput = new StringBuilder();
+                }
             }
-            String fileName = "gen_"+name+".txt";
-            write(fileName, fileOutput.toString());
+
+            if (count>0){
+                count = 0;
+                String fileName = name+fileCount+".csv";
+                fileCount++;
+                write("JK"+fileName, fileOutput.toString());
+            }
         }
     }
 
